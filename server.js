@@ -26,7 +26,9 @@ app.post('/webhook', async (req, res) => {
         const telefono = issue.fields.customfield_10034 || 'No especificado';
         const entrega = issue.fields.customfield_10036.value || 'No especificado';
         const indicacionesgenerales = issue.fields.customfield_10056 || 'No especificado';
-        const FechaEntrega = issue.fields.customfield_10059 || 'No especificado';
+        const FechaEntrega = issue.fields.customfield_10039
+        ? moment(issue.fields.customfield_10039).format("DD.MM.YYYY [a las] hh:mma")
+        : 'Fecha no especificada';
         const orden = issue.fields.customfield_10084 || 'No especificado';
         const contacto = issue.fields.customfield_10035 || 'No especificado';
         const direccion = issue.fields.customfield_10037 || 'No especificado';
@@ -310,7 +312,7 @@ body {
         </div>
         <div class="line2">
           <span>Cliente:</span>
-          <span>${data.Cliente}}</span>
+          <span>${data.Cliente}</span>
         </div>
         <div class="line3">
           <span>Requiere Diseño</span>
@@ -357,7 +359,7 @@ body {
           <table class="info-table">
             <tr>
               <td>Base:</td>
-              <td>${data.Base}cm:</td>
+              <td>${data.Base}cm</td>
             </tr>
             <tr>
               <td>Altura:</td>
