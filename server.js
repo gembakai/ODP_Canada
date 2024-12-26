@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
+import moment from 'moment';
 
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
@@ -412,7 +413,7 @@ body {
         `;
 
         // Guardar el HTML en un archivo
-        const htmlPath = './output.html';
+        const htmlPath = `./${data.Clave} + ${data.TituloTrabajo}.html`;
         fs.writeFileSync(htmlPath, htmlContent);
 
         console.log(`Archivo HTML generado: ${htmlPath}`);
