@@ -309,7 +309,7 @@ body {
 
 .description{
  color: #979797;
- box-sizing: border-box;
+//  box-sizing: border-box;
    padding: 1rem 1rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
 
