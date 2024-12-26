@@ -309,10 +309,10 @@ body {
 
 .description{
  color: #979797;
-    padding: 1.5rem 1rem
+ box-sizing: border-box;
+   padding: 1.5rem 2rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
-    border: 1px solid #ccc; /* Línea ligera para resaltar la caja */
-    border-radius: 5px; /* Bordes ligeramente redondeados */
+
 
 
 }
