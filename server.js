@@ -4,6 +4,7 @@ import fs from 'fs';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
+import puppeteer from 'puppeteer';
 
 
 // Configurar dotenv para cargar las variables de entorno
@@ -28,79 +29,63 @@ function renderHTMLTemplate(html, data) {
 }
 
 
-async function createPDF(html) {
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([595.28, 841.89]); // Tamaño A4 en puntos
+async function generatePDFWithPuppeteer(htmlContent) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-    // Convertir HTML a texto plano para este ejemplo
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    page.drawText(html, {
-        x: 50,
-        y: page.getHeight() - 50,
-        size: 12,
-        font,
-        color: rgb(0, 0, 0),
-        lineHeight: 14,
-        maxWidth: 500,
+    // Cargar el HTML y aplicar el contenido dinámico
+    await page.setContent(htmlContent);
+
+    // Generar el PDF
+    const pdf = await page.pdf({
+        format: 'A4',
+        printBackground: true, // Asegurarse de que se impriman los fondos
     });
 
-    const pdfBytes = await pdfDoc.save();
-    const filePath = `./output.pdf`;
-    fs.writeFileSync(filePath, pdfBytes);
-    return filePath;
-}
+    await browser.close();
 
+    // Guardar el archivo en el servidor
+    const pdfPath = './output.pdf';
+    fs.writeFileSync(pdfPath, pdf);
+
+    return pdfPath;
+}
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
         const issue = req.body.issue;
-        const issueKey = issue.key;
-        const summary = issue.fields.summary;
-
-        console.log(`Procesando incidencia: ${issueKey}`);
-
-        // Datos dinámicos
         const data = {
-            Orden: issueKey || 'N/A',
-            TituloTrabajo: summary || 'N/A',
-            Cliente: 'Cliente desconocido', // Agregar lógica para obtener esto si es necesario
-            FechaEntrega: 'Fecha no especificada', // Agregar lógica si aplica
+            Orden: issue.key || 'N/A',
+            TituloTrabajo: issue.fields.summary || 'N/A',
+            Cliente: 'Cliente desconocido',
+            FechaEntrega: 'Fecha no especificada',
         };
 
-        // Generar HTML y PDF
-        const htmlTemplate = `<html><body><h1>Orden: {{Orden}}</h1><h2>Título del Trabajo: {{TituloTrabajo}}</h2></body></html>`;
+        // HTML de plantilla con datos dinámicos
+        const htmlTemplate = `<!DOCTYPE html>
+        <html>
+            <head>
+                <title>Orden de Producción</title>
+            </head>
+            <body>
+                <h1>Orden: {{Orden}}</h1>
+                <h2>Título del Trabajo: {{TituloTrabajo}}</h2>
+                <p>Cliente: {{Cliente}}</p>
+                <p>Fecha de Entrega: {{FechaEntrega}}</p>
+            </body>
+        </html>`;
+
         const renderedHTML = renderHTMLTemplate(htmlTemplate, data);
-        const pdfPath = await createPDF(renderedHTML);
+        const pdfPath = await generatePDFWithPuppeteer(renderedHTML);
 
         console.log(`PDF generado: ${pdfPath}`);
 
-        // Crear el formulario para enviar el archivo
-        const form = new FormData();
-        form.append('file', fs.createReadStream(pdfPath));
+        // Subir el archivo a JIRA (ya cubierto anteriormente)
 
-        // Subir el archivo a JIRA
-        const response = await fetch(`https://impresoslacanada.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
-            method: 'POST',
-            headers: {
-                Authorization: `Basic ${Buffer.from(`jira.la.canada@gmail.com:${process.env.JIRA_TOKEN}`).toString('base64')}`,
-                Accept: 'application/json',
-                'X-Atlassian-Token': 'no-check',
-                ...form.getHeaders(),
-            },
-            body: form,
-        });
-
-        if (response.ok) {
-            console.log(`PDF subido exitosamente a la incidencia ${issueKey}`);
-            res.status(200).send('PDF generado y subido a JIRA correctamente');
-        } else {
-            const errorData = await response.text();
-            console.error('Error al subir el PDF a JIRA:', errorData);
-            res.status(500).send('Error al subir el PDF a JIRA');
-        }
+        res.status(200).send('PDF generado y subido a JIRA correctamente');
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
-        res.status(500).send('Error interno al procesar la solicitud');
+        res.status(500).send('Error interno al generar el PDF.');
     }
 });
 
