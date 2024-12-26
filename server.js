@@ -1,11 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import puppeteer from 'puppeteer';
-
 
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
@@ -18,7 +16,7 @@ app.get('/', (req, res) => {
     res.send('Servidor funcionando correctamente.');
 });
 
-
+// Función para convertir HTML a PDF usando Puppeteer
 async function convertHTMLToPDF(htmlPath) {
     const browser = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -43,27 +41,52 @@ async function convertHTMLToPDF(htmlPath) {
     return pdfPath;
 }
 
-
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
         const issue = req.body.issue;
         const issueKey = issue.key;
+        const summary = issue.fields.summary;
 
         console.log(`Procesando incidencia: ${issueKey}`);
 
-        // Ruta del archivo HTML generado previamente
+        // Datos dinámicos
+        const data = {
+            Orden: issueKey || 'N/A',
+            TituloTrabajo: summary || 'N/A',
+            Cliente: 'Cliente desconocido',
+            FechaEntrega: 'Fecha no especificada',
+        };
+
+        // Generar el contenido del HTML
+        const htmlContent = `<!DOCTYPE html>
+        <html>
+            <head>
+                <title>Orden de Producción</title>
+            </head>
+            <body>
+                <h1>Orden: ${data.Orden}</h1>
+                <h2>Título del Trabajo: ${data.TituloTrabajo}</h2>
+                <p>Cliente: ${data.Cliente}</p>
+                <p>Fecha de Entrega: ${data.FechaEntrega}</p>
+            </body>
+        </html>`;
+
+        // Guardar el HTML en un archivo
         const htmlPath = './output.html';
+        fs.writeFileSync(htmlPath, htmlContent);
+
+        console.log(`Archivo HTML generado: ${htmlPath}`);
 
         // Convertir HTML a PDF
         const pdfPath = await convertHTMLToPDF(htmlPath);
-
         console.log(`PDF generado: ${pdfPath}`);
 
-        // Subir el archivo PDF a JIRA (código previo)
+        // Crear el formulario para enviar el archivo PDF
         const form = new FormData();
         form.append('file', fs.createReadStream(pdfPath));
 
+        // Subir el archivo PDF a JIRA
         const response = await fetch(`https://impresoslacanada.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
             method: 'POST',
             headers: {
