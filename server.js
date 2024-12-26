@@ -18,20 +18,29 @@ app.get('/', (req, res) => {
     res.send('Servidor funcionando correctamente.');
 });
 
-function formatWithColors(text) {
+function formatWithColorsAndHeaders(text) {
+    // Reemplazar etiquetas de encabezados (h1, h2, h3, etc.)
+    text = text.replace(
+        /(h[1-6])\. (.*?)(?=\sh[1-6]\.|$)/g,
+        '<$1>$2</$1>'
+    );
+
     // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
-    let formattedText = text.replace(
+    text = text.replace(
         /{color:([^}]+)}/g,
         '<span style="color:$1;">'
     );
 
     // Reemplazar `{color}` por `</span>`
-    formattedText = formattedText.replace(
+    text = text.replace(
         /{color}/g,
         '</span>'
     );
 
-    return formattedText;
+    // Eliminar asteriscos alrededor del texto
+    text = text.replace(/\*([^*]+)\*/g, '$1');
+
+    return text;
 }
 
 
@@ -46,7 +55,7 @@ app.post('/webhook', async (req, res) => {
         const telefono = issue.fields.customfield_10034 || 'No especificado';
         const entrega = issue.fields.customfield_10036.value || 'No especificado';
         const indicacionesgeneralesRaw = issue.fields.customfield_10056 || 'No especificado';
-        const indicacionesgenerales = formatWithColors(indicacionesgeneralesRaw);
+        const indicacionesgenerales = formatWithColorsAndHeaders(indicacionesgeneralesRaw);
         const FechaEntrega = issue.fields.customfield_10039
         ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
         : 'Fecha no especificada';
