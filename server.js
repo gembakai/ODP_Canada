@@ -4,7 +4,7 @@ import fs from 'fs';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import moment from 'moment';
-import 'moment/locale/es'; // Importar el idioma español
+import 'moment/locale/es.js';
 moment.locale('es'); // Configurar a español
 
 // Configurar dotenv para cargar las variables de entorno
