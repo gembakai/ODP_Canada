@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 // Función para convertir HTML a PDF usando Puppeteer
 async function convertHTMLToPDF(htmlPath) {
     const browser = await puppeteer.launch({
+        executablePath: '/opt/render/.cache/puppeteer/chrome-linux/chrome', // Ruta al navegador descargado
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: true,
     });
@@ -41,6 +42,7 @@ async function convertHTMLToPDF(htmlPath) {
     await browser.close();
     return pdfPath;
 }
+
 
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
