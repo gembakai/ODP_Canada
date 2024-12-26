@@ -54,9 +54,9 @@ function formatWithColorsAndHeaders(text) {
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
 
-    const issueid = issue.fields.issuetype.id
+    const issueid = issue.fields.issuetype.id;
 
-    if (issueid==10005){
+    if (issueid=="10005"){
 
     try {
 
