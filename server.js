@@ -135,7 +135,7 @@ body {
     flex-direction: column; /* Organización vertical */
     align-items: center;
     justify-content: flex-start;
-    border: 3px solid black;
+    
 }
 
 /* Header */
