@@ -49,7 +49,7 @@ function formatWithColorsAndHeaders(text) {
 }
 
 
-const issueid = issue.fields.issuetype.id;
+const issueid = req.body.issue.fields.issuetype.id;
 
 if(issueid==10010){
     
