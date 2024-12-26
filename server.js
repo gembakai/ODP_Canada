@@ -23,10 +23,10 @@ function formatWithColorsAndHeaders(text) {
     return text
         .split('\n') // Dividir en líneas
         .map((line) => {
-            // Reemplazar etiquetas de encabezados (h1, h2, h3, etc.)
+            // Reemplazar cualquier encabezado por <h2>
             line = line.replace(
                 /^(h[1-6])\. (.*)$/, // Detectar encabezado al inicio de la línea
-                '<$1>$2</$1>'
+                '<h2>$2</h2>'
             );
 
             // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
@@ -309,8 +309,8 @@ body {
 
 .description{
     color: #979797;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 1.8rem;
+
     word-break: break-all;
 
 }
