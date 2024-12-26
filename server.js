@@ -19,7 +19,6 @@ app.get('/', (req, res) => {
 });
 
 function formatWithColorsAndHeaders(text) {
-    // Dividir el texto en líneas y procesar cada línea
     return text
         .split('\n') // Dividir en líneas
         .map((line) => {
@@ -44,10 +43,11 @@ function formatWithColorsAndHeaders(text) {
             // Eliminar asteriscos alrededor del texto
             line = line.replace(/\*([^*]+)\*/g, '$1');
 
-            return line; // Devolver la línea procesada
+            return line.trim(); // Devolver la línea procesada
         })
-        .join('\n'); // Volver a unir las líneas procesadas
+        .join(''); // Unir sin nuevas líneas
 }
+
 
 
 // Ruta para manejar el webhook de JIRA
@@ -310,7 +310,7 @@ body {
 .description{
  color: #979797;
  box-sizing: border-box;
-   padding: 1.5rem 2rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
+   padding: 1.5rem 1rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
 
 
