@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import FormData from 'form-data';
+import fetch from 'node-fetch';
 
 
 // Configurar dotenv para cargar las variables de entorno
@@ -52,34 +54,53 @@ async function createPDF(html) {
 app.post('/webhook', async (req, res) => {
     try {
         const issue = req.body.issue;
+        const issueKey = issue.key;
+        const summary = issue.fields.summary;
+
+        console.log(`Procesando incidencia: ${issueKey}`);
+
+        // Datos dinámicos
         const data = {
-            Orden: issue.key || 'N/A',
-            TituloTrabajo: issue.fields.summary || 'N/A',
-            Cliente: issue.fields.customfield_12345 || 'Cliente desconocido', // Reemplaza con el campo correcto
-            FechaEntrega: issue.fields.duedate || 'Fecha no especificada',
+            Orden: issueKey || 'N/A',
+            TituloTrabajo: summary || 'N/A',
+            Cliente: 'Cliente desconocido', // Agregar lógica para obtener esto si es necesario
+            FechaEntrega: 'Fecha no especificada', // Agregar lógica si aplica
         };
 
-        // HTML proporcionado como plantilla
-        const htmlTemplate = `<!DOCTYPE html>
-        <html>
-            <body>
-                <h1>Orden: {{Orden}}</h1>
-                <h2>Título del Trabajo: {{TituloTrabajo}}</h2>
-                <p>Cliente: {{Cliente}}</p>
-                <p>Fecha de Entrega: {{FechaEntrega}}</p>
-            </body>
-        </html>`;
-
+        // Generar HTML y PDF
+        const htmlTemplate = `<html><body><h1>Orden: {{Orden}}</h1><h2>Título del Trabajo: {{TituloTrabajo}}</h2></body></html>`;
         const renderedHTML = renderHTMLTemplate(htmlTemplate, data);
-
-        console.log('Generando PDF...');
         const pdfPath = await createPDF(renderedHTML);
 
-        console.log('PDF generado:', pdfPath);
-        res.status(200).send('PDF generado y listo para subir a JIRA.');
+        console.log(`PDF generado: ${pdfPath}`);
+
+        // Crear el formulario para enviar el archivo
+        const form = new FormData();
+        form.append('file', fs.createReadStream(pdfPath));
+
+        // Subir el archivo a JIRA
+        const response = await fetch(`https://impresoslacanada.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Basic ${Buffer.from(`jira.la.canada@gmail.com:${process.env.JIRA_TOKEN}`).toString('base64')}`,
+                Accept: 'application/json',
+                'X-Atlassian-Token': 'no-check',
+                ...form.getHeaders(),
+            },
+            body: form,
+        });
+
+        if (response.ok) {
+            console.log(`PDF subido exitosamente a la incidencia ${issueKey}`);
+            res.status(200).send('PDF generado y subido a JIRA correctamente');
+        } else {
+            const errorData = await response.text();
+            console.error('Error al subir el PDF a JIRA:', errorData);
+            res.status(500).send('Error al subir el PDF a JIRA');
+        }
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
-        res.status(500).send('Error interno al generar el PDF.');
+        res.status(500).send('Error interno al procesar la solicitud');
     }
 });
 
