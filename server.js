@@ -54,15 +54,14 @@ function formatWithColorsAndHeaders(text) {
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
 
-    const issueid = issue.fields.issuetype.id;
 
-    if (issueid=="10005"){
+
 
     try {
 
-     
+        const issueid = issue.fields.issuetype.id;
 
-     
+
 
 
         const issue = req.body.issue;
@@ -495,9 +494,9 @@ body {
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
         res.status(500).send('Error interno al procesar la solicitud');
-    }
 
-}
+
+    }
 
 });
 
