@@ -18,6 +18,23 @@ app.get('/', (req, res) => {
     res.send('Servidor funcionando correctamente.');
 });
 
+function formatWithColors(text) {
+    // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
+    let formattedText = text.replace(
+        /{color:([^}]+)}/g,
+        '<span style="color:$1;">'
+    );
+
+    // Reemplazar `{color}` por `</span>`
+    formattedText = formattedText.replace(
+        /{color}/g,
+        '</span>'
+    );
+
+    return formattedText;
+}
+
+
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
@@ -28,7 +45,8 @@ app.post('/webhook', async (req, res) => {
         const prioridad = issue.fields.priority.name;
         const telefono = issue.fields.customfield_10034 || 'No especificado';
         const entrega = issue.fields.customfield_10036.value || 'No especificado';
-        const indicacionesgenerales = issue.fields.customfield_10056 || 'No especificado';
+        const indicacionesgeneralesRaw = issue.fields.customfield_10056 || 'No especificado';
+        const indicacionesgenerales = formatWithColors(indicacionesgeneralesRaw);
         const FechaEntrega = issue.fields.customfield_10039
         ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
         : 'Fecha no especificada';
@@ -298,7 +316,7 @@ body {
         />
 
         <img
-          src="https://static.wixstatic.com/media/49738c_b7a8d6c919a84bfa9a8b93aafe11249f~mv2.png"
+          src="https://static.wixstatic.com/media/49738c_1dd6b8fc3d394a03a0accae10af48acc~mv2.png"
           alt="Gran Formato"
           class="categoria"
         />
