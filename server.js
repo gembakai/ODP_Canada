@@ -72,7 +72,7 @@ app.post('/webhook', async (req, res) => {
         form.append('file', fs.createReadStream(htmlPath));
 
         // Subir el archivo a JIRA
-        const response = await fetch(`https://<tu-dominio-jira>.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
+        const response = await fetch(`https://impresoslacanada.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
             method: 'POST',
             headers: {
                 Authorization: `Basic ${Buffer.from(`<tu-email>:${process.env.JIRA_TOKEN}`).toString('base64')}`,
