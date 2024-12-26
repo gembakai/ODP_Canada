@@ -13,9 +13,41 @@ app.get('/', (req, res) => {
 });
 
 // Ruta para manejar el webhook de JIRA
-app.post('/webhook', (req, res) => {
-    console.log('Datos recibidos desde JIRA:', JSON.stringify(req.body, null, 2));
-    res.status(200).send('Webhook recibido correctamente');
+app.post('/webhook', async (req, res) => {
+    try {
+        // Extraer información de la incidencia
+        const issue = req.body.issue;
+        const issueKey = issue.key;
+        const summary = issue.fields.summary;
+        const issueTypeId = issue.fields.issuetype.id; // Tipo de incidencia (ID)
+
+        console.log(`Procesando incidencia: ${issueKey}`);
+        console.log(`Resumen: ${summary}`);
+        console.log(`Tipo de incidencia: ${issueTypeId}`);
+
+        // Seleccionar el HTML según el tipo de incidencia
+        let htmlTemplate;
+        switch (issueTypeId) {
+            case '1003':
+                htmlTemplate = '<h1>Plantilla para tipo 1003</h1>';
+                break;
+            case '1004':
+                htmlTemplate = '<h1>Plantilla para tipo 1004</h1>';
+                break;
+            default:
+                htmlTemplate = '<h1>Plantilla por defecto</h1>';
+                break;
+        }
+
+        console.log(`Plantilla seleccionada: ${htmlTemplate}`);
+
+        // Generar el PDF aquí (lógica futura)
+
+        res.status(200).send('Webhook procesado correctamente');
+    } catch (error) {
+        console.error('Error al procesar el webhook:', error);
+        res.status(500).send('Error interno del servidor');
+    }
 });
 
 // Configuración del puerto
