@@ -19,28 +19,34 @@ app.get('/', (req, res) => {
 });
 
 function formatWithColorsAndHeaders(text) {
-    // Reemplazar etiquetas de encabezados (h1, h2, h3, etc.)
-    text = text.replace(
-        /(h[1-6])\. (.*?)(?=\sh[1-6]\.|$)/g,
-        '<$1>$2</$1>'
-    );
+    // Dividir el texto en líneas y procesar cada línea
+    return text
+        .split('\n') // Dividir en líneas
+        .map((line) => {
+            // Reemplazar etiquetas de encabezados (h1, h2, h3, etc.)
+            line = line.replace(
+                /^(h[1-6])\. (.*)$/, // Detectar encabezado al inicio de la línea
+                '<$1>$2</$1>'
+            );
 
-    // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
-    text = text.replace(
-        /{color:([^}]+)}/g,
-        '<span style="color:$1;">'
-    );
+            // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
+            line = line.replace(
+                /{color:([^}]+)}/g,
+                '<span style="color:$1;">'
+            );
 
-    // Reemplazar `{color}` por `</span>`
-    text = text.replace(
-        /{color}/g,
-        '</span>'
-    );
+            // Reemplazar `{color}` por `</span>`
+            line = line.replace(
+                /{color}/g,
+                '</span>'
+            );
 
-    // Eliminar asteriscos alrededor del texto
-    text = text.replace(/\*([^*]+)\*/g, '$1');
+            // Eliminar asteriscos alrededor del texto
+            line = line.replace(/\*([^*]+)\*/g, '$1');
 
-    return text;
+            return line; // Devolver la línea procesada
+        })
+        .join('\n'); // Volver a unir las líneas procesadas
 }
 
 
