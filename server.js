@@ -29,63 +29,71 @@ function renderHTMLTemplate(html, data) {
 }
 
 
-async function generatePDFWithPuppeteer(htmlContent) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
 
-    // Cargar el HTML y aplicar el contenido dinámico
-    await page.setContent(htmlContent);
-
-    // Generar el PDF
-    const pdf = await page.pdf({
-        format: 'A4',
-        printBackground: true, // Asegurarse de que se impriman los fondos
-    });
-
-    await browser.close();
-
-    // Guardar el archivo en el servidor
-    const pdfPath = './output.pdf';
-    fs.writeFileSync(pdfPath, pdf);
-
-    return pdfPath;
-}
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
         const issue = req.body.issue;
+        const issueKey = issue.key;
+        const summary = issue.fields.summary;
+
+        console.log(`Procesando incidencia: ${issueKey}`);
+
+        // Datos dinámicos
         const data = {
-            Orden: issue.key || 'N/A',
-            TituloTrabajo: issue.fields.summary || 'N/A',
+            Orden: issueKey || 'N/A',
+            TituloTrabajo: summary || 'N/A',
             Cliente: 'Cliente desconocido',
             FechaEntrega: 'Fecha no especificada',
         };
 
-        // HTML de plantilla con datos dinámicos
-        const htmlTemplate = `<!DOCTYPE html>
+        // Generar el contenido del HTML
+        const htmlContent = `<!DOCTYPE html>
         <html>
             <head>
                 <title>Orden de Producción</title>
             </head>
             <body>
-                <h1>Orden: {{Orden}}</h1>
-                <h2>Título del Trabajo: {{TituloTrabajo}}</h2>
-                <p>Cliente: {{Cliente}}</p>
-                <p>Fecha de Entrega: {{FechaEntrega}}</p>
+                <h1>Orden: ${data.Orden}</h1>
+                <h2>Título del Trabajo: ${data.TituloTrabajo}</h2>
+                <p>Cliente: ${data.Cliente}</p>
+                <p>Fecha de Entrega: ${data.FechaEntrega}</p>
             </body>
         </html>`;
 
-        const renderedHTML = renderHTMLTemplate(htmlTemplate, data);
-        const pdfPath = await generatePDFWithPuppeteer(renderedHTML);
+        // Guardar el HTML en un archivo
+        const htmlPath = './output.html';
+        fs.writeFileSync(htmlPath, htmlContent);
 
-        console.log(`PDF generado: ${pdfPath}`);
+        console.log(`Archivo HTML generado: ${htmlPath}`);
 
-        // Subir el archivo a JIRA (ya cubierto anteriormente)
+        // Crear el formulario para enviar el archivo
+        const form = new FormData();
+        form.append('file', fs.createReadStream(htmlPath));
 
-        res.status(200).send('PDF generado y subido a JIRA correctamente');
+        // Subir el archivo a JIRA
+        const response = await fetch(`https://<tu-dominio-jira>.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Basic ${Buffer.from(`<tu-email>:${process.env.JIRA_TOKEN}`).toString('base64')}`,
+                Accept: 'application/json',
+                'X-Atlassian-Token': 'no-check',
+                ...form.getHeaders(),
+            },
+            body: form,
+        });
+
+        if (response.ok) {
+            console.log(`Archivo HTML subido exitosamente a la incidencia ${issueKey}`);
+            res.status(200).send('Archivo HTML generado y subido a JIRA correctamente');
+        } else {
+            const errorData = await response.text();
+            console.error('Error al subir el archivo HTML a JIRA:', errorData);
+            res.status(500).send('Error al subir el archivo HTML a JIRA');
+        }
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
-        res.status(500).send('Error interno al generar el PDF.');
+        res.status(500).send('Error interno al procesar la solicitud');
     }
 });
 
