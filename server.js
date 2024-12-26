@@ -53,21 +53,12 @@ function formatWithColorsAndHeaders(text) {
 
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
-
-
-
-
     try {
-
-        const issueid = issue.fields.issuetype.id;
-
-
-
-
+        
         const issue = req.body.issue;
         const issueKey = issue.key;
         const summary = issue.fields.summary;
-        const cliente = issue.fields.customfield_583 || 'No especificado';
+        const cliente = issue.fields.customfield_10083 || 'No especificado';
         const prioridad = issue.fields.priority.name;
         const telefono = issue.fields.customfield_10034 || 'No especificado';
         const entrega = issue.fields.customfield_10036.value || 'No especificado';
@@ -494,10 +485,7 @@ body {
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
         res.status(500).send('Error interno al procesar la solicitud');
-
-
     }
-
 });
 
 // Configuración del puerto
