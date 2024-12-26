@@ -5,6 +5,7 @@ import FormData from 'form-data';
 import fetch from 'node-fetch';
 import puppeteer from 'puppeteer';
 
+
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
 
