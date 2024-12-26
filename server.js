@@ -4,6 +4,8 @@ import fs from 'fs';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import moment from 'moment';
+import 'moment/locale/es'; // Importar el idioma español
+moment.locale('es'); // Configurar a español
 
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
@@ -28,8 +30,9 @@ app.post('/webhook', async (req, res) => {
         const entrega = issue.fields.customfield_10036.value || 'No especificado';
         const indicacionesgenerales = issue.fields.customfield_10056 || 'No especificado';
         const FechaEntrega = issue.fields.customfield_10039
-        ? moment(issue.fields.customfield_10039).format("DD.MM.YYYY [a las] hh:mma")
+        ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
         : 'Fecha no especificada';
+    
         const orden = issue.fields.customfield_10084 || 'No especificado';
         const contacto = issue.fields.customfield_10035 || 'No especificado';
         const direccion = issue.fields.customfield_10037 || 'No especificado';
