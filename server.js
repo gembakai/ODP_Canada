@@ -21,16 +21,58 @@ app.post('/webhook', async (req, res) => {
         const issue = req.body.issue;
         const issueKey = issue.key;
         const summary = issue.fields.summary;
+        const cliente = issue.fields.customfield_10083 || 'No especificado';
+        const prioridad = issue.fields.priority.name;
+        const telefono = issue.fields.customfield_10034 || 'No especificado';
+        const entrega = issue.fields.customfield_10036.value || 'No especificado';
+        const indicacionesgenerales = issue.fields.customfield_10056 || 'No especificado';
+        const FechaEntrega = issue.fields.customfield_10059 || 'No especificado';
+        const orden = issue.fields.customfield_10084 || 'No especificado';
+        const contacto = issue.fields.customfield_10035 || 'No especificado';
+        const direccion = issue.fields.customfield_10037 || 'No especificado';
+        const instruccionesdeentrega = issue.fields.customfield_10038 || 'No especificado';
+        const base = issue.fields.customfield_10049 || 'No especificado';
+        const altura = issue.fields.customfield_10050 || 'No especificado';
+        const cantidad = issue.fields.customfield_10051 || 'No especificado';
+        const material = issue.fields.customfield_10052.child.value || 'No especificado';
+        const ingreso = issue.fields.customfield_10040 || 'No especificado';
+        const diseno = issue.fields.customfield_10089.value || 'No especificado';
+        const reimresion = issue.fields.customfield_10090.value || 'No especificado';
+        const laminacion = issue.fields.customfield_10090.value || 'No especificado';
+        const troquelado = issue.fields.customfield_10053.value || 'No especificado';
+        const acabados = issue.fields.customfield_10054.value || 'No especificado';
+
+      
+
 
         console.log(`Procesando incidencia: ${issueKey}`);
 
         // Datos dinámicos
         const data = {
-            Orden: issueKey || 'N/A',
+            Clave: issueKey || 'N/A',
             TituloTrabajo: summary || 'N/A',
-            Cliente: 'Cliente desconocido',
-            FechaEntrega: 'Fecha no especificada',
+            Cliente: cliente,
+            Prioridad: prioridad,
+            Telefono: telefono,
+            Entrega: entrega,
+            IndicacionesGenerales: indicacionesgenerales,
+            FechaEntrega: FechaEntrega,
+            NumeroOrden: orden,
+            Contacto: contacto,
+            Direccion: direccion,
+            InstruccionesDeEntrega: instruccionesdeentrega,
+            Base: base,
+            Altura: altura,
+            Cantidad: cantidad,
+            Material: material,
+            Ingreso: ingreso,
+            RequiereDiseno: diseno,
+            Reimpresion: reimresion,
+            Laminacion: laminacion,
+            Troquelado: troquelado,
+            Acabados: acabados
         };
+
 
         // Generar el contenido del HTML
         const htmlContent = `<!DOCTYPE html>
@@ -257,34 +299,34 @@ body {
 
         <div class="ordendeproduccion">
           <span>#Orden</span>
-          <span>1735N</span>
+          <span>${data.NumeroOrden}</span>
         </div>
       </div>
 
       <div class="InfoGeneral">
         <div class="line1">
           <span>Título del Trabajo:</span>
-          <span>TRAF-1211-OP 1735N ICEE ROTULACION MESA CARRITO</span>
+          <span>${data.Clave} + ${data.TituloTrabajo}</span>
         </div>
         <div class="line2">
           <span>Cliente:</span>
-          <span>ICEE</span>
+          <span>${data.Cliente}}</span>
         </div>
         <div class="line3">
           <span>Requiere Diseño</span>
-          <span>No</span>
+          <span>${data.RequiereDiseno}</span>
         </div>
         <div class="line4">
           <span>Reimpresión</span>
-          <span>No</span>
+          <span>${data.Reimpresion}</span>
         </div>
         <div class="line5">
           <span>Fecha de entrega</span>
-          <span>10.01.2025 a las 02:00pm</span>
+          <span>${data.FechaEntrega}</span>
         </div>
         <div class="line6">
           <span>Prioridad</span>
-          <span>Normal</span>
+          <span>${data.Prioridad}</span>
         </div>
       </div>
 
@@ -294,19 +336,19 @@ body {
           <table class="info-table">
             <tr>
               <td>Teléfono:</td>
-              <td>No especificado</td>
+              <td>${data.Telefono}</td>
             </tr>
             <tr>
               <td>Tipo de entrega:</td>
-              <td>Cliente Recoge</td>
+              <td>${data.Entrega}</td>
             </tr>
             <tr>
               <td>Contacto:</td>
-              <td>No especificado</td>
+              <td>${data.Contacto}</td>
             </tr>
             <tr>
               <td>Dirección:</td>
-              <td>No especificado</td>
+              <td>${data.Direccion}</td>
             </tr>
           </table>
         </div>
@@ -315,31 +357,31 @@ body {
           <table class="info-table">
             <tr>
               <td>Base:</td>
-              <td>131.5cm:</td>
+              <td>${data.Base}cm:</td>
             </tr>
             <tr>
               <td>Altura:</td>
-              <td>156cm</td>
+              <td>${data.Altura}cm</td>
             </tr>
             <tr>
               <td>Cantidad:</td>
-              <td>1 unidades</td>
+              <td>${data.Cantidad} unidades</td>
             </tr>
             <tr>
               <td>Material:</td>
-              <td>Vinil Control Tac 137cm</td>
+              <td>${data.Material}</td>
             </tr>
             <tr>
               <td>Laminación:</td>
-              <td>Laminación 8519</td>
+              <td>${data.Laminacion}</td>
             </tr>
             <tr>
               <td>Troquelado:</td>
-              <td>Digital</td>
+              <td>${data.Troquelado}</td>
             </tr>
             <tr>
               <td>Acabados:</td>
-              <td>Refilado</td>
+              <td>${data.Acabados}</td>
             </tr>
           </table>
         </div>
@@ -349,18 +391,16 @@ body {
         
         <div class="caja1">
           <span>Indicaciones de entrega</span>
-          <div class="caja"><p class="description">No especificado</p></div>
+          <div class="caja"><p class="description">${data.InstruccionesDeEntrega}</p></div>
         </div>
 
          
         <div class="caja2">
           <span>Indicaciones Generales</span>
-          <div class="caja"><p class="description">4 IMPRESION EN CONTROL TAC +8519 + PLOTEADOAREA TOTAL
-            120X206 CM76X62.5 CM
-            ¢110.000 + IVA C/U</p></div>
+          <div class="caja"><p class="description">${data.IndicacionesGenerales}</p></div>
         </div>
 
-        <span class="fecha">Fecha de ingreso: miércoles 14 de agosto de 2024 a las 03:17:28 p. m.</span>
+        <span class="fecha">Fecha de ingreso: ${data.Ingreso}</span>
 
       </div>
     </div>
