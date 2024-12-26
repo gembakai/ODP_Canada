@@ -5,11 +5,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); // Permitir que Express procese JSON en el cuerpo de la solicitud
 
 // Ruta básica de prueba
 app.get('/', (req, res) => {
     res.send('Servidor funcionando correctamente.');
+});
+
+// Ruta para manejar el webhook de JIRA
+app.post('/webhook', (req, res) => {
+    console.log('Datos recibidos desde JIRA:', JSON.stringify(req.body, null, 2));
+    res.status(200).send('Webhook recibido correctamente');
 });
 
 // Configuración del puerto
