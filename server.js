@@ -63,9 +63,9 @@ app.post('/webhook', async (req, res) => {
         const indicacionesgeneralesRaw = issue.fields.customfield_10056 || 'No especificado';
         const indicacionesgenerales = formatWithColorsAndHeaders(indicacionesgeneralesRaw);
         const FechaEntrega = issue.fields.customfield_10039
-        ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
-        : 'Fecha no especificada';
-    
+            ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
+            : 'Fecha no especificada';
+
         const orden = issue.fields.customfield_10084 || 'No especificado';
         const contacto = issue.fields.customfield_10035 || 'No especificado';
         const direccion = issue.fields.customfield_10037 || 'No especificado';
@@ -81,7 +81,7 @@ app.post('/webhook', async (req, res) => {
         const troquelado = issue.fields.customfield_10053.value || 'No especificado';
         const acabados = issue.fields.customfield_10054.value || 'No especificado';
 
-      
+
 
 
         console.log(`Procesando incidencia: ${issueKey}`);
@@ -308,10 +308,13 @@ body {
 }
 
 .description{
-    color: #979797;
+ color: #979797;
     padding: 1.8rem;
-
-    word-break: break-all;
+    margin: 1rem; /* Espacio externo */
+    word-wrap: break-word; /* Evitar divisiones incómodas */
+    border: 1px solid #ccc; /* Línea ligera para resaltar la caja */
+    border-radius: 5px; /* Bordes ligeramente redondeados */
+    background-color: #f9f9f9; /* Fondo claro para mejor visibilidad */
 
 }
 
