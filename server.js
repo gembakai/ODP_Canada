@@ -1,5 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+
 
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
@@ -12,41 +15,71 @@ app.get('/', (req, res) => {
     res.send('Servidor funcionando correctamente.');
 });
 
+
+function renderHTMLTemplate(html, data) {
+    let renderedHTML = html;
+    for (const [key, value] of Object.entries(data)) {
+        const regex = new RegExp(`{{${key}}}`, 'g'); // Busca {{key}} en el HTML
+        renderedHTML = renderedHTML.replace(regex, value);
+    }
+    return renderedHTML;
+}
+
+
+async function createPDF(html) {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595.28, 841.89]); // Tamaño A4 en puntos
+
+    // Convertir HTML a texto plano para este ejemplo
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    page.drawText(html, {
+        x: 50,
+        y: page.getHeight() - 50,
+        size: 12,
+        font,
+        color: rgb(0, 0, 0),
+        lineHeight: 14,
+        maxWidth: 500,
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const filePath = `./output.pdf`;
+    fs.writeFileSync(filePath, pdfBytes);
+    return filePath;
+}
+
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
-        // Extraer información de la incidencia
         const issue = req.body.issue;
-        const issueKey = issue.key;
-        const summary = issue.fields.summary;
-        const issueTypeId = issue.fields.issuetype.id; // Tipo de incidencia (ID)
+        const data = {
+            Orden: issue.key || 'N/A',
+            TituloTrabajo: issue.fields.summary || 'N/A',
+            Cliente: issue.fields.customfield_12345 || 'Cliente desconocido', // Reemplaza con el campo correcto
+            FechaEntrega: issue.fields.duedate || 'Fecha no especificada',
+        };
 
-        console.log(`Procesando incidencia: ${issueKey}`);
-        console.log(`Resumen: ${summary}`);
-        console.log(`Tipo de incidencia: ${issueTypeId}`);
+        // HTML proporcionado como plantilla
+        const htmlTemplate = `<!DOCTYPE html>
+        <html>
+            <body>
+                <h1>Orden: {{Orden}}</h1>
+                <h2>Título del Trabajo: {{TituloTrabajo}}</h2>
+                <p>Cliente: {{Cliente}}</p>
+                <p>Fecha de Entrega: {{FechaEntrega}}</p>
+            </body>
+        </html>`;
 
-        // Seleccionar el HTML según el tipo de incidencia
-        let htmlTemplate;
-        switch (issueTypeId) {
-            case '1003':
-                htmlTemplate = '<h1>Plantilla para tipo 1003</h1>';
-                break;
-            case '1004':
-                htmlTemplate = '<h1>Plantilla para tipo 1004</h1>';
-                break;
-            default:
-                htmlTemplate = '<h1>Plantilla por defecto</h1>';
-                break;
-        }
+        const renderedHTML = renderHTMLTemplate(htmlTemplate, data);
 
-        console.log(`Plantilla seleccionada: ${htmlTemplate}`);
+        console.log('Generando PDF...');
+        const pdfPath = await createPDF(renderedHTML);
 
-        // Generar el PDF aquí (lógica futura)
-
-        res.status(200).send('Webhook procesado correctamente');
+        console.log('PDF generado:', pdfPath);
+        res.status(200).send('PDF generado y listo para subir a JIRA.');
     } catch (error) {
         console.error('Error al procesar el webhook:', error);
-        res.status(500).send('Error interno del servidor');
+        res.status(500).send('Error interno al generar el PDF.');
     }
 });
 
