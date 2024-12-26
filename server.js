@@ -75,7 +75,7 @@ app.post('/webhook', async (req, res) => {
         const response = await fetch(`https://impresoslacanada.atlassian.net/rest/api/3/issue/${issueKey}/attachments`, {
             method: 'POST',
             headers: {
-                Authorization: `Basic ${Buffer.from(`<tu-email>:${process.env.JIRA_TOKEN}`).toString('base64')}`,
+                Authorization: `Basic ${Buffer.from(`jira.la.canada@gmail.com:${process.env.JIRA_TOKEN}`).toString('base64')}`,
                 Accept: 'application/json',
                 'X-Atlassian-Token': 'no-check',
                 ...form.getHeaders(),
