@@ -303,14 +303,14 @@ body {
    width: 100%;
    min-height: 100px;
    height: auto;
-   border: 1px solid rgb(183, 183, 183);
-   border-radius: 10px;
+//    border: 1px solid rgb(183, 183, 183);
+//    border-radius: 10px;
 }
 
 .description{
  color: #979797;
  box-sizing: border-box;
-   padding: 1.5rem 1rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
+   padding: 1rem 1rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
 
 
