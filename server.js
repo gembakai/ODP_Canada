@@ -32,6 +32,7 @@ function loadTemplate(issueTypeId) {
   // Mapeo de ID de tipo de incidencia a nombres de archivo
   const templateMap = {
       10005: 'Template-GranFormato.html',
+      10010: 'Template-PequenoFormato.html'
       // Agrega otros IDs y archivos aquí según sea necesario
       // 10006: 'OtroTemplate.html',
   };
@@ -109,30 +110,44 @@ app.post('/webhook', async (req, res) => {
 
         // Datos dinámicos
         const data = {
-            Clave: issueKey || 'N/A',
-            TituloTrabajo: issue.fields.summary || 'N/A',
-            Cliente: issue.fields.customfield_10083 || 'No especificado',
-            Prioridad: issue.fields.priority?.name || 'No especificada',
-            Telefono: issue.fields.customfield_10034 || 'No especificado',
-            Entrega: issue.fields.customfield_10036?.value || 'No especificado',
-            IndicacionesGenerales: formatWithColorsAndHeaders(issue.fields.customfield_10056 || 'No especificado'),
-            FechaEntrega: issue.fields.customfield_10039
-                ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
-                : 'Fecha no especificada',
-            NumeroOrden: issue.fields.customfield_10084 || 'No especificado',
-            Contacto: issue.fields.customfield_10035 || 'No especificado',
-            Direccion: issue.fields.customfield_10037 || 'No especificado',
-            InstruccionesDeEntrega: issue.fields.customfield_10038 || 'No especificado',
+          //Genéricas
+          Clave: issueKey || 'N/A',
+          TituloTrabajo: issue.fields.summary || 'N/A',
+          Cliente: issue.fields.customfield_10083 || 'No especificado',
+          Prioridad: issue.fields.priority?.name || 'No especificada',
+          Telefono: issue.fields.customfield_10034 || 'No especificado',
+          Entrega: issue.fields.customfield_10036?.value || 'No especificado',
+          IndicacionesGenerales: formatWithColorsAndHeaders(issue.fields.customfield_10056 || 'No especificado'),
+          FechaEntrega: issue.fields.customfield_10039
+          ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
+          : 'Fecha no especificada',
+          NumeroOrden: issue.fields.customfield_10084 || 'No especificado',
+          Contacto: issue.fields.customfield_10035 || 'No especificado',
+          Direccion: issue.fields.customfield_10037 || 'No especificado',
+          InstruccionesDeEntrega: issue.fields.customfield_10038 || 'No especificado',
+          RequiereDiseno: issue.fields.customfield_10089?.value || 'No especificado',
+          Reimpresion: issue.fields.customfield_10090?.value || 'No especificado',
+          Cantidad: issue.fields.customfield_10051 || 'No especificado',
+          Material: issue.fields.customfield_10052?.child?.value || 'No especificado',
+          Ingreso: issue.fields.customfield_10040 || 'No especificado',
+          
+          
+          //Genéricas
+
+// Gran formato
+
             Base: issue.fields.customfield_10049 || 'No especificado',
             Altura: issue.fields.customfield_10050 || 'No especificado',
-            Cantidad: issue.fields.customfield_10051 || 'No especificado',
-            Material: issue.fields.customfield_10052?.child?.value || 'No especificado',
-            Ingreso: issue.fields.customfield_10040 || 'No especificado',
-            RequiereDiseno: issue.fields.customfield_10089?.value || 'No especificado',
-            Reimpresion: issue.fields.customfield_10090?.value || 'No especificado',
             Laminacion: issue.fields.customfield_10090?.value || 'No especificado',
             Troquelado: issue.fields.customfield_10053?.value || 'No especificado',
             Acabados: issue.fields.customfield_10054?.value || 'No especificado',
+
+/// Pqueno formato
+
+            TipoAcabado: issue.fields.customfield_10072
+
+
+
         };
 
         // Personalizar la plantilla con los datos de la incidencia
