@@ -9,6 +9,14 @@ moment.locale('es'); // Configurar a español
 import pdfmake from 'pdfmake';
 import path from 'path';
 
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+// Crear __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 // Configurar dotenv para cargar las variables de entorno
 dotenv.config();
 
@@ -17,13 +25,14 @@ app.use(express.json());
 
 // Fuentes para pdfmake
 const fonts = {
-    Roboto: {
-        normal: path.join(__dirname, 'fonts/Roboto-Regular.ttf'),
-        bold: path.join(__dirname, 'fonts/Roboto-Bold.ttf'),
-        italics: path.join(__dirname, 'fonts/Roboto-Italic.ttf'),
-        bolditalics: path.join(__dirname, 'fonts/Roboto-BoldItalic.ttf'),
-    },
+  Roboto: {
+      normal: path.join(__dirname, 'fonts/Roboto-Regular.ttf'),
+      bold: path.join(__dirname, 'fonts/Roboto-Bold.ttf'),
+      italics: path.join(__dirname, 'fonts/Roboto-Italic.ttf'),
+      bolditalics: path.join(__dirname, 'fonts/Roboto-BoldItalic.ttf'),
+  },
 };
+
 
 const printer = new pdfmake(fonts);
 
