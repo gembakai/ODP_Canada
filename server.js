@@ -448,7 +448,12 @@ body {
         `;
 
         // Configuración del PDF
-        const options = { format: 'A4', border: '10mm' };
+        const options = {
+            format: 'Letter', // Esto será sobrescrito por las dimensiones personalizadas
+            width: '21cm',    // Ancho personalizado
+            height: '27.94cm',// Alto personalizado
+            border: '2mm',   // Opcional: Bordes
+        };
 
         // Generar el PDF
         const pdfPath = `./output_${issueKey}.pdf`;
