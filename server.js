@@ -119,7 +119,7 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-// Configuración del puerto
+// Configuración del puertos
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
