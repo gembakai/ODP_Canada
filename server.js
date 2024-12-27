@@ -32,7 +32,8 @@ function loadTemplate(issueTypeId) {
   // Mapeo de ID de tipo de incidencia a nombres de archivo
   const templateMap = {
     10005: 'Template-GranFormato.html',
-    10010: 'Template-PequenoFormato.html'
+    10010: 'Template-PequenoFormato.html',
+    10006: 'Template-Litografia.html'
     // Agrega otros IDs y archivos aquí según sea necesario
     // 10006: 'OtroTemplate.html',
   };
@@ -148,9 +149,21 @@ app.post('/webhook', async (req, res) => {
         ? issue.fields.customfield_10072.map(item => item.value || 'Desconocido').join(', ')
         : 'No especificado',
 
-        Dimensiones: issue.fields.customfield_10076?.value || 'No especificado'
+        Dimensiones: issue.fields.customfield_10076?.value || 'No especificado',
+
+      ///////// Imprenta
 
 
+       Original: issue.fields.customfield_10060?.value || 'No especificado',
+       Copia1: issue.fields.customfield_10061 || '',
+       Copia2: issue.fields.customfield_10062 || '',
+       Copia3: issue.fields.customfield_10063 || '',
+       Copia4: issue.fields.customfield_10064 || '',
+       Copia5: issue.fields.customfield_10065 || '',
+       tinta: issue.fields.customfield_10066 || '',
+       delnumero: issue.fields.customfield_10067 || '',
+       alnumero: issue.fields.customfield_10068 || ''
+       
 
     };
 

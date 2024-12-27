@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Orden de producción Pequeño Formato</title>
+    <title>Orden de producción Imprenta y Litografía</title>
         <style>
    /* General */
 body {
@@ -21,6 +20,50 @@ body {
     justify-content: flex-start;
     
 }
+
+.copias td{
+
+text-align: center;
+
+}
+
+.colores {
+  display: flex;
+  
+}
+
+.celda {
+  flex: 1;
+  max-width: 200px; /* Ancho máximo por si el contenido es muy grande */
+  border: 1px solid rgb(212, 212, 212);
+  text-align: center;
+  font-weight: normal; /* Asegúrate de que el peso de la fuente sea normal */
+  align-content: center;
+  font-size: 13px; /* Tamaño de texto */
+}
+
+.Finalrow {
+  flex: 1;
+  max-width: 200px; /* Ancho máximo por si el contenido es muy grande */
+  border: 1px solid rgb(212, 212, 212);
+  text-align: center;
+  font-weight: bold; /* Asegúrate de que el peso de la fuente sea normal */
+  align-content: center;
+  font-size: 10px;
+
+}
+
+.Finalrow2 {
+  flex: 1;
+  max-width: 200px; /* Ancho máximo por si el contenido es muy grande */
+  border: 1px solid rgb(212, 212, 212);
+  text-align: center;
+  font-weight: lighter; /* Asegúrate de que el peso de la fuente sea normal */
+  align-content: center;
+  font-size: 14px;
+
+}
+
 
 /* Header */
 .header {
@@ -40,7 +83,7 @@ body {
 }
 
 .categoria {
-    width: 200px; /* Ancho fijo */
+    width: 240px; /* Ancho fijo */
     height: auto; /* Altura proporcional */
 }
 
@@ -122,6 +165,9 @@ body {
     border-collapse: collapse; /* Elimina los espacios entre bordes */
     font-family: Arial, sans-serif;
     font-size: 16px; /* Tamaño de texto */
+    display: flex;
+    border: 1px solid rgb(222, 222, 222);
+
 }
 
 /* Bordes y líneas grises */
@@ -134,7 +180,7 @@ body {
 }
 
 /* Primera columna en bold */
-.info-table td:first-child {
+.info-table td:first-child:not(.celda):not(.Finalrow2):not(.Finalrow) { 
     font-weight: bold;
     color: #333; /* Color ligeramente más oscuro */
 }
@@ -187,13 +233,12 @@ body {
    width: 100%;
    min-height: 100px;
    height: auto;
-    border: 1px solid rgb(183, 183, 183);
-   border-radius: 10px;
+
 }
 
 .description{
  color: #979797;
-box-sizing: border-box;
+
    padding: 0.5rem 0.5rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
 
@@ -217,8 +262,8 @@ box-sizing: border-box;
         />
 
         <img
-          src="https://static.wixstatic.com/media/49738c_b7a8d6c919a84bfa9a8b93aafe11249f~mv2.png"
-          alt="Pequeño Formato"
+          src="https://static.wixstatic.com/media/49738c_3de554c7d5dc4f31b65e91439bbc6b17~mv2.png"
+          alt="Gran Formato"
           class="categoria"
         />
 
@@ -282,7 +327,7 @@ box-sizing: border-box;
           <table class="info-table">
             <tr>
               <td>Dimensiones:</td>
-              <td>{{Dimensiones}}</td>
+              <td>{{Dimensiones}}cm</td>
             </tr>
 
             <tr>
@@ -297,6 +342,33 @@ box-sizing: border-box;
               <td>Acabados:</td>
               <td>{{TipoAcabado}}</td>
             </tr>
+            <tr>
+              <td>Original:</td>
+              <td>{{Original}}</td>
+            </tr>
+            <tr colspan="2" class="copias">
+              <td colspan="2">Copias:</td> 
+            </tr>
+            <tr colspan="2" class="colores">
+              <td colspan="1" class="celda">{{Copia1}}</td>
+              <td colspan="1" class="celda">{{Copia2}}</td>
+              <td colspan="1" class="celda">{{Copia3}}</td>
+              <td colspan="1" class="celda">{{Copia4}}</td>
+              <td colspan="1" class="celda">{{Copia5}}</td>
+            </tr>
+
+            <tr colspan="2" class="colores">
+              <td colspan="1" class="Finalrow">Color Tinta</td>
+              <td colspan="1" class="Finalrow">Nueva Numeración Del</td>
+              <td colspan="1" class="Finalrow">Nueva Numeración Al</td>
+            </tr>
+            
+            <tr colspan="2" class="colores">
+              <td colspan="1" class="Finalrow2">{{tinta}}</td>
+              <td colspan="1" class="Finalrow2">{{delnumero}}</td>
+              <td colspan="1" class="Finalrow2">{{alnumero}}</td>
+            </tr>
+            
           </table>
         </div>
       </div>
