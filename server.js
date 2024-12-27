@@ -64,34 +64,34 @@ app.post('/webhook', async (req, res) => {
 
     function formatWithColorsAndHeaders(text) {
       return text
-        .split('\n') // Dividir en líneas
-        .map((line) => {
-          // Reemplazar cualquier encabezado por <h2>
-          line = line.replace(
-            /^(h[1-6])\. (.*)$/, // Detectar encabezado al inicio de la línea
-            '<h2>$2</h2>'
-          );
-
-          // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
-          line = line.replace(
-            /{color:([^}]+)}/g,
-            '<span style="color:$1;">'
-          );
-
-          // Reemplazar `{color}` por `</span>`
-          line = line.replace(
-            /{color}/g,
-            '</span>'
-          );
-
-          // Eliminar asteriscos alrededor del texto
-          line = line.replace(/\*([^*]+)\*/g, '$1');
-
-          return line.trim(); // Devolver la línea procesada
-        })
-        .join(''); // Unir sin nuevas líneas
-    }
-
+          .split('\n') // Dividir en líneas
+          .map((line) => {
+              // Reemplazar cualquier encabezado por <h2>
+              line = line.replace(
+                  /^(h[1-6])\. (.*)$/, // Detectar encabezado al inicio de la línea
+                  '<h2>$2</h2>'
+              );
+  
+              // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
+              line = line.replace(
+                  /{color:([^}]+)}/g,
+                  '<span style="color:$1;">'
+              );
+  
+              // Reemplazar `{color}` por `</span>`
+              line = line.replace(
+                  /{color}/g,
+                  '</span>'
+              );
+  
+              // Eliminar asteriscos alrededor del texto
+              line = line.replace(/\*([^*]+)\*/g, '$1');
+  
+              return line.trim(); // Devolver la línea procesada
+          })
+          .join('<br>'); // Unir las líneas con <br> para respetar los saltos de línea
+  }
+  
 
 
 
