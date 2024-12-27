@@ -4,6 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "npx puppeteer install && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,5 +20,8 @@
     "pdf-lib": "^1.17.1",
     "playwright": "^1.49.1",
     "puppeteer": "^23.11.1"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
