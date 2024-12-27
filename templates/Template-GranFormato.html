@@ -187,13 +187,13 @@ body {
    width: 100%;
    min-height: 100px;
    height: auto;
-//    border: 1px solid rgb(183, 183, 183);
-//    border-radius: 10px;
+    border: 1px solid rgb(183, 183, 183);
+   border-radius: 10px;
 }
 
 .description{
  color: #979797;
-//  box-sizing: border-box;
+ box-sizing: border-box;
    padding: 0.5rem 0.5rem; /* 1.5rem arriba/abajo, 2rem derecha/izquierda */
     word-wrap: break-word; /* Evitar divisiones incómodas */
 
@@ -224,34 +224,34 @@ body {
 
         <div class="ordendeproduccion">
           <span>#Orden</span>
-          <span>${data.NumeroOrden}</span>
+          <span>{{NumeroOrden}}</span>
         </div>
       </div>
 
       <div class="InfoGeneral">
         <div class="line1">
           <span>Título del Trabajo:</span>
-          <span>${data.Clave} + ${data.TituloTrabajo}</span>
+          <span>{{Clave}} + {{TituloTrabajo}}</span>
         </div>
         <div class="line2">
           <span>Cliente:</span>
-          <span>${data.Cliente}</span>
+          <span>{{Cliente}}</span>
         </div>
         <div class="line3">
           <span>Requiere Diseño</span>
-          <span>${data.RequiereDiseno}</span>
+          <span>{{RequiereDiseno}}</span>
         </div>
         <div class="line4">
           <span>Reimpresión</span>
-          <span>${data.Reimpresion}</span>
+          <span>{{Reimpresion}}</span>
         </div>
         <div class="line5">
           <span>Fecha de entrega</span>
-          <span>${data.FechaEntrega}</span>
+          <span>{{FechaEntrega}}</span>
         </div>
         <div class="line6">
           <span>Prioridad</span>
-          <span>${data.Prioridad}</span>
+          <span>{{Prioridad}}</span>
         </div>
       </div>
 
@@ -261,19 +261,19 @@ body {
           <table class="info-table">
             <tr>
               <td>Teléfono:</td>
-              <td>${data.Telefono}</td>
+              <td>{{Telefono}}</td>
             </tr>
             <tr>
               <td>Tipo de entrega:</td>
-              <td>${data.Entrega}</td>
+              <td>{{Entrega}}</td>
             </tr>
             <tr>
               <td>Contacto:</td>
-              <td>${data.Contacto}</td>
+              <td>{{Contacto}}</td>
             </tr>
             <tr>
               <td>Dirección:</td>
-              <td>${data.Direccion}</td>
+              <td>{{Direccion}}</td>
             </tr>
           </table>
         </div>
@@ -282,31 +282,31 @@ body {
           <table class="info-table">
             <tr>
               <td>Base:</td>
-              <td>${data.Base}cm</td>
+              <td>{{Base}}cm</td>
             </tr>
             <tr>
               <td>Altura:</td>
-              <td>${data.Altura}cm</td>
+              <td>{{Altura}}cm</td>
             </tr>
             <tr>
               <td>Cantidad:</td>
-              <td>${data.Cantidad} unidades</td>
+              <td>{{Cantidad}} unidades</td>
             </tr>
             <tr>
               <td>Material:</td>
-              <td>${data.Material}</td>
+              <td>{{Material}}</td>
             </tr>
             <tr>
               <td>Laminación:</td>
-              <td>${data.Laminacion}</td>
+              <td>{{Laminacion}}</td>
             </tr>
             <tr>
               <td>Troquelado:</td>
-              <td>${data.Troquelado}</td>
+              <td>{{Troquelado}}</td>
             </tr>
             <tr>
               <td>Acabados:</td>
-              <td>${data.Acabados}</td>
+              <td>{{Acabados}}</td>
             </tr>
           </table>
         </div>
@@ -316,16 +316,16 @@ body {
         
         <div class="caja1">
           <span>Indicaciones de entrega</span>
-          <div class="caja"><p class="description">${data.InstruccionesDeEntrega}</p></div>
+          <div class="caja"><p class="description">${{InstruccionesDeEntrega}}</p></div>
         </div>
 
          
         <div class="caja2">
           <span>Indicaciones Generales</span>
-          <div class="caja"><p class="description">${data.IndicacionesGenerales}</p></div>
+          <div class="caja"><p class="description">{{IndicacionesGenerales}}</p></div>
         </div>
 
-        <span class="fecha">Fecha de ingreso: ${data.Ingreso}</span>
+        <span class="fecha">Fecha de ingreso: {{Ingreso}}</span>
 
       </div>
     </div>
