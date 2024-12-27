@@ -146,8 +146,9 @@ app.post('/webhook', async (req, res) => {
 
       TipoAcabado : Array.isArray(issue.fields.customfield_10072)
         ? issue.fields.customfield_10072.map(item => item.value || 'Desconocido').join(', ')
-        : 'No especificado'
+        : 'No especificado',
 
+        Dimensiones: issue.fields.customfield_10076?.value || 'No especificado'
 
 
 
