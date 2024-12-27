@@ -449,9 +449,9 @@ body {
 
         // Configuración del PDF
         const options = {
-            format: 'Letter', // Esto será sobrescrito por las dimensiones personalizadas
-            width: '21cm',    // Ancho personalizado
-            height: '27.94cm',// Alto personalizado
+            // format: 'Letter', // Esto será sobrescrito por las dimensiones personalizadas
+            width: '30cm',    // Ancho personalizado
+            height: '40cm',// Alto personalizado
             border: '2mm',   // Opcional: Bordes
         };
 
