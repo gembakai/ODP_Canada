@@ -81,6 +81,34 @@ app.post('/webhook', async (req, res) => {
                 const troquelado = issue.fields.customfield_10053.value || 'No especificado';
                 const acabados = issue.fields.customfield_10054.value || 'No especificado';
 
+
+
+          // Datos dinámicos
+          const data = {
+            Clave: issueKey || 'N/A',
+            TituloTrabajo: summary || 'N/A',
+            Cliente: cliente,
+            Prioridad: prioridad,
+            Telefono: telefono,
+            Entrega: entrega,
+            IndicacionesGenerales: indicacionesgenerales,
+            FechaEntrega: FechaEntrega,
+            NumeroOrden: orden,
+            Contacto: contacto,
+            Direccion: direccion,
+            InstruccionesDeEntrega: instruccionesdeentrega,
+            Base: base,
+            Altura: altura,
+            Cantidad: cantidad,
+            Material: material,
+            Ingreso: ingreso,
+            RequiereDiseno: diseno,
+            Reimpresion: reimresion,
+            Laminacion: laminacion,
+            Troquelado: troquelado,
+            Acabados: acabados
+        };
+
         // Generar el contenido del HTML
         const htmlContent = `
             <!DOCTYPE html>
