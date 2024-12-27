@@ -55,7 +55,7 @@ function loadTemplate(issueTypeId) {
 // Función para reemplazar valores dinámicos en la plantilla
 function populateTemplate(template, data) {
   return template.replace(/{{(\w+)}}/g, (placeholder, key) => {
-    return data[key] || 'Información no disponible';
+    return data[key] || ' ';
   });
 }
 
