@@ -2,9 +2,9 @@
   "name": "odp_impresos_canada",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "npx puppeteer install && node index.js",
+    "start": "npx puppeteer install && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
