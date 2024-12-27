@@ -6,9 +6,17 @@ import fetch from 'node-fetch';
 import moment from 'moment';
 import path from 'path';
 import 'moment/locale/es.js';
-moment.locale('es'); // Configurar a español
+moment.locale('es');
+import { fileURLToPath } from 'url'; // Configurar a español
 
-// Configurar dotenv para cargar las variables de entorno
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
+// Configurar dotenv para cargar las variables de 
+// 
+// entorno
 dotenv.config();
 
 const app = express();
