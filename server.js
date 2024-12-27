@@ -10,7 +10,7 @@ import pdfmake from 'pdfmake';
 import path from 'path';
 
 import { fileURLToPath } from 'url';
-import path from 'path';
+
 
 // Crear __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
