@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import moment from 'moment';
 import 'moment/locale/es.js';
 moment.locale('es'); // Configurar a español
-import pdfmake from 'pdfmake';
+import PdfPrinter from 'pdfmake';
 import path from 'path';
 
 import { fileURLToPath } from 'url';
@@ -33,8 +33,7 @@ const fonts = {
   },
 };
 
-
-const printer = new pdfmake(fonts);
+const printer = new PdfPrinter(fonts);
 
 function formatWithColorsAndHeaders(text) {
     return text
