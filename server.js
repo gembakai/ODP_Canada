@@ -60,6 +60,40 @@ function populateTemplate(template, data) {
 // Ruta para manejar el webhook de JIRA
 app.post('/webhook', async (req, res) => {
     try {
+
+      function formatWithColorsAndHeaders(text) {
+        return text
+            .split('\n') // Dividir en líneas
+            .map((line) => {
+                // Reemplazar cualquier encabezado por <h2>
+                line = line.replace(
+                    /^(h[1-6])\. (.*)$/, // Detectar encabezado al inicio de la línea
+                    '<h2>$2</h2>'
+                );
+    
+                // Reemplazar `{color:#hex}` por `<span style="color:#hex;">`
+                line = line.replace(
+                    /{color:([^}]+)}/g,
+                    '<span style="color:$1;">'
+                );
+    
+                // Reemplazar `{color}` por `</span>`
+                line = line.replace(
+                    /{color}/g,
+                    '</span>'
+                );
+    
+                // Eliminar asteriscos alrededor del texto
+                line = line.replace(/\*([^*]+)\*/g, '$1');
+    
+                return line.trim(); // Devolver la línea procesada
+            })
+            .join(''); // Unir sin nuevas líneas
+    }
+
+
+
+      
         const issue = req.body.issue;
         const issueKey = issue.key;
 
@@ -81,7 +115,7 @@ app.post('/webhook', async (req, res) => {
             Prioridad: issue.fields.priority?.name || 'No especificada',
             Telefono: issue.fields.customfield_10034 || 'No especificado',
             Entrega: issue.fields.customfield_10036?.value || 'No especificado',
-            IndicacionesGenerales: issue.fields.customfield_10056 || 'No especificado',
+            IndicacionesGenerales: formatWithColorsAndHeaders(issue.fields.customfield_10056 || 'No especificado'),
             FechaEntrega: issue.fields.customfield_10039
                 ? moment(issue.fields.customfield_10039).format("DD [de] MMMM [de] YYYY [a las] hh:mma")
                 : 'Fecha no especificada',
